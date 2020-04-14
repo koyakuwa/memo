@@ -74,7 +74,7 @@ const templateBodyContent = `
 </html>
 `
 
-const templateMemoContent = `# {{.Title}}
+const templateMemoContent = `* {{.Title}}
 `
 
 type config struct {
@@ -265,7 +265,7 @@ func msg(err error) int {
 func filterMarkdown(files []string) []string {
 	var newfiles []string
 	for _, file := range files {
-		if strings.HasSuffix(file, ".md") {
+		if strings.HasSuffix(file, ".org") {
 			newfiles = append(newfiles, file)
 		}
 	}
@@ -314,7 +314,7 @@ func firstline(name string) string {
 		}
 	}
 	body = strings.SplitN(strings.TrimSpace(body), "\n", 2)[0]
-	return strings.TrimLeft(body, "# ")
+	return strings.TrimLeft(body, "* ")
 }
 
 func cmdList(c *cli.Context) error {
@@ -475,7 +475,7 @@ func cmdNew(c *cli.Context) error {
 	now := time.Now()
 	if c.Args().Present() {
 		title = c.Args().First()
-		file = now.Format("2006-01-02-") + escape(title) + ".md"
+		file = now.Format("2006-01-02-") + escape(title) + ".org"
 	} else {
 		fmt.Print("Title: ")
 		scanner := bufio.NewScanner(os.Stdin)
@@ -488,10 +488,10 @@ func cmdNew(c *cli.Context) error {
 		title = scanner.Text()
 		if title == "" {
 			title = now.Format("2006-01-02")
-			file = title + ".md"
+			file = title + ".org"
 
 		} else {
-			file = now.Format("2006-01-02-") + escape(title) + ".md"
+			file = now.Format("2006-01-02-") + escape(title) + ".org"
 		}
 	}
 	file = filepath.Join(cfg.MemoDir, file)
